@@ -1,9 +1,11 @@
 #!/bin/bash -e
 
 # For peace of mind, we'll use a default ubuntu:24.04 container and add the musl toolchain here instead
-export ARCH=x86_64-linux-musl
+# Taken from the Dockerfile for muslcc-toolchain-ubuntu:
+# https://raw.githubusercontent.com/abcfy2/docker-muslcc-toolchain-ubuntu/main/Dockerfile
+export ARCH="${ARCH:-x86_64-linux-musl}"
 export CROSS_HOST="${ARCH}"
-export CROSS_ROOT="/cross_root"
+export CROSS_ROOT=${CROSS_ROOT:-/cross_root}
 export PATH="${CROSS_ROOT}/bin:${PATH}"
 export CROSS_PREFIX="${CROSS_ROOT}/${CROSS_HOST}"
 export DEBIAN_FRONTEND=noninteractive
@@ -80,8 +82,6 @@ deb http://mirror.sjtu.edu.cn/ubuntu/ ${UBUNTU_CODENAME}-backports main restrict
 deb http://mirror.sjtu.edu.cn/ubuntu/ ${UBUNTU_CODENAME}-security main restricted universe multiverse
 EOF
 fi
-
-export DEBIAN_FRONTEND=noninteractive
 
 # keep debs in container for store cache in docker volume
 rm -f /etc/apt/apt.conf.d/*
